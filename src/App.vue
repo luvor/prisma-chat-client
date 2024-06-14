@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class="messages">
+    <div ref="messages" class="messages">
       <div
         v-for="msg in messages"
         :key="msg.id"
@@ -19,6 +19,7 @@
           <a :href="msg.fileUrl" target="_blank" download>Скачать</a>
         </div>
       </div>
+      <div ref="messagesBottom"></div>
     </div>
     <div class="user-actions">
       <input class="user-name" v-model="user" placeholder="имя" />
@@ -63,6 +64,9 @@ export default {
         this.ws.send(JSON.stringify(message))
         this.content = ''
         this.fileUrl = null
+        setTimeout(() => {
+          this.scrollToBottom()
+        }, 100)
       }
     },
     async uploadFiles(files) {
@@ -92,6 +96,13 @@ export default {
     },
     handleFileChange(event) {
       this.uploadFiles(event.target.files)
+    },
+    scrollToBottom() {
+      const el = this.$refs.messagesBottom
+      console.log(el)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
+      }
     },
   },
 }
